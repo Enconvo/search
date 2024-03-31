@@ -1,0 +1,164 @@
+{
+  "$schema": "https://enconvo.com/schemas/extension.json",
+  "name": "search",
+  "version": "0.0.6",
+  "description": "Local Search Extension for search files and applications.",
+  "title": "Search Engine",
+  "icon": "icon.png",
+  "author": "EnconvoAI",
+  "categories": [
+    "Search"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "commands": [
+    {
+      "name": "main_search_list",
+      "title": "Search List",
+      "description": "",
+      "mode": "no-view",
+      "showInCommandList": false,
+      "preferences": [
+        {
+          "name": "sync_applications",
+          "description": "sync_applications",
+          "type": "checkbox",
+          "required": false,
+          "title": "Search Applications",
+          "default": true
+        },
+        {
+          "name": "embedding",
+          "description": "The model used to generate embedding",
+          "type": "extension",
+          "required": false,
+          "default": "default",
+          "title": "Embedding Model"
+        }
+      ]
+    },
+    {
+      "name": "search_files",
+      "title": "Search Files",
+      "description": "Search files, support regex.",
+      "icon": "search_files.png",
+      "mode": "listView",
+      "preferences": [
+        {
+          "name": "searchPath",
+          "description": "The directories to search",
+          "type": "directory",
+          "default": "~/Documents,~/Downloads,~/Desktop",
+          "title": "Directories to search"
+        },
+        {
+          "name": "formats",
+          "description": "The file formats to search,leave blank to search all formats.",
+          "type": "textfield",
+          "default": "pdf,doc,xls,ppt,txt,json,md,epub",
+          "title": "Supported file formats"
+        }
+      ]
+    },
+    {
+      "name": "search_files_with_content",
+      "title": "Search Files By Content",
+      "description": "Search files by file content, support regex.",
+      "icon": "search_files_with_content.png",
+      "mode": "listView",
+      "preferences": [
+        {
+          "name": "searchPath",
+          "description": "The directories to search",
+          "type": "directory",
+          "default": "~/Documents,~/Downloads,~/Desktop",
+          "title": "Directories to search"
+        },
+        {
+          "name": "formats",
+          "description": "The file formats to search,leave blank to search all formats.",
+          "type": "textfield",
+          "default": "pdf,doc,xls,ppt,txt,json,md,epub",
+          "title": "Supported file formats"
+        }
+      ]
+    },
+    {
+      "name": "serpapi",
+      "title": "Browsering Tool",
+      "description": "Use SerpAPI to get real time information, go to [SerpAPI](https://serpapi.com/) to get your api key.",
+      "icon": "icon.png",
+      "mode": "no-view",
+      "aiPlugin": true,
+      "params": [
+        {
+          "name": "text",
+          "description": "The text to be used as search query.",
+          "type": "string",
+          "required": true,
+          "default": ""
+        }
+      ],
+      "preferences": [
+        {
+          "name": "text",
+          "description": "The text to be used as the search query",
+          "type": "params",
+          "default": "The text to be used as the search query",
+          "title": "Parmas"
+        },
+        {
+          "name": "engine",
+          "description": "which search engine to use",
+          "type": "dropdown",
+          "required": false,
+          "title": "Engine",
+          "default": "google",
+          "data": [
+            {
+              "title": "google",
+              "value": "google"
+            }
+          ]
+        },
+        {
+          "name": "api_key",
+          "description": "search api key",
+          "type": "password",
+          "required": false,
+          "title": "Search Api Key",
+          "default": "",
+          "placeholder": "Search Api Key"
+        },
+        {
+          "name": "llm",
+          "description": "The model used to generate responses",
+          "type": "extension",
+          "required": false,
+          "default": "default",
+          "title": "LLM Model"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@enconvo/api": "/Users/ysnows/Documents/Project/enconvo.nodejs/enconvo_api",
+    "fuzzysort": "^2.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.17.14",
+    "@types/react": "18.2.27",
+    "eslint": "^8.33.0",
+    "prettier": "^2.8.3",
+    "tsup": "^7.2.0",
+    "typescript": "^5.0.4"
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "lint:fix": "npm run lint --fix",
+    "format": "prettier --write \"**/*.ts\"",
+    "format:check": "prettier --list-different \"**/*.ts\"",
+    "build": "enconvo",
+    "dev": "enconvo --dev"
+  }
+}
