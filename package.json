@@ -1,9 +1,9 @@
 {
   "$schema": "https://enconvo.com/schemas/extension.json",
   "name": "search",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Local Search Extension for search files and applications.",
-  "title": "Search Engine",
+  "title": "Search Files",
   "icon": "icon.png",
   "author": "EnconvoAI",
   "categories": [
