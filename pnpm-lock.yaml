@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@enconvo/api':
-    specifier: /Users/ysnows/Documents/Project/enconvo.nodejs/enconvo_api
-    version: link:../../enconvo.nodejs/enconvo_api
+    specifier: ^0.1.2
+    version: 0.1.2
   fuzzysort:
     specifier: ^2.0.4
     version: 2.0.4
@@ -38,6 +38,11 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /@enconvo/api@0.1.2:
+    resolution: {integrity: sha512-j0/BtktmhmgVXBnhDj34Q+Wj1BGrRVB3qJr2CAKjD51LQ0X1LlzqzQz5tIFaj2t2/2LGz/FaoNkQbc0q3iOJPQ==}
+    hasBin: true
+    dev: false
 
   /@esbuild/aix-ppc64@0.19.12:
     resolution: {integrity: sha512-bmoCYyWdEL3wDQIVbcyzRyeKLgk2WtWLTWz1ZIAZF/EGbNOwSA6ew3PftJ1PqMiOOGu0OyFMzG53L0zqIpPeNA==}
