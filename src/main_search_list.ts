@@ -67,7 +67,6 @@ export default async function main(req: Request) {
 
 
 export const handleSyncListRequest = async (req: Request): Promise<any> => {
-    console.log("handleSyncListRequest")
     const options = await req.json()
 
     return await syncList(options)
@@ -105,14 +104,12 @@ let syncing = false
 
 export const syncList = async (options: any): Promise<any> => {
     // 包含多个文件或者文件夹
-    console.log("syncing", syncing)
     if (syncing) {
         return
     }
 
     syncing = true
 
-    console.log("syncList", options)
     const { sync_applications } = options
 
     try {
