@@ -85,7 +85,7 @@
     }
   ],
   "dependencies": {
-    "@enconvo/api": "^0.1.2",
+    "@enconvo/api": "^0.1.123",
     "fuzzysort": "^2.0.4"
   },
   "devDependencies": {
@@ -103,5 +103,6 @@
     "format:check": "prettier --list-different \"**/*.ts\"",
     "build": "enconvo",
     "dev": "enconvo --dev"
-  }
+  },
+  "minAppVersion": "1.8.8"
 }

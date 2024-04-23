@@ -23,6 +23,7 @@ export interface SearchResult {
 export default function App() {
     const [searchText, setSearchText] = useState("");
     const [searchPath, setSearchPath] = useState("");
+    const [state, setState] = useState("");
     const [formats, setFormats] = useState("");
     const [items, setItems] = useState<SearchResult[]>([]);
     const [list, setList] = useState<SearchResult[]>([]);
@@ -67,7 +68,7 @@ export default function App() {
             const tmpFilePath = `${environment.supportPath}/tmp.txt`
 
             const getFilesRe = `${rg.rgPath} ${searchFormats} --files ${searchPath} > ${tmpFilePath}`;
-            console.log("getFilesRe",getFilesRe)
+            console.log("getFilesRe", getFilesRe)
             exec(getFilesRe)
         })
     }, []); // 依赖数组中包含 apps，当 apps 更新时，此 useEffect 将运行
