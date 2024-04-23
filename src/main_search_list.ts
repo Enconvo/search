@@ -58,6 +58,16 @@ export default async function main(req: Request) {
                 return b.lastUseTime - a.lastUseTime
             })
         }
+        // 让b.name === 'chat' 的排在最前面
+        lastReulst.sort((a, b) => {
+            if (a.path === 'chat_with_ai|chat') {
+                return -1
+            }
+            if (b.path === 'chat_with_ai|chat') {
+                return 1
+            }
+            return 0
+        })
 
         return JSON.stringify(lastReulst)
     } catch (err) {

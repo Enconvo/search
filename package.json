@@ -85,7 +85,7 @@
     }
   ],
   "dependencies": {
-    "@enconvo/api": "^0.1.123",
+    "@enconvo/api": "^0.1.124",
     "fuzzysort": "^2.0.4"
   },
   "devDependencies": {
