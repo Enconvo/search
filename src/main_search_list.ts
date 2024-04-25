@@ -33,7 +33,8 @@ export default async function main(req: Request) {
     // let table;
     try {
         const { options } = await req.json()
-        const { text: searchText } = options
+        const { text: searchText, search_application } = options
+        console.log('searchText', options)
 
         if (list.length <= 0) {
 
@@ -41,25 +42,42 @@ export default async function main(req: Request) {
             await syncList(options)
         }
 
-        let lastReulst: SearchResult[] = []
-        if (!searchText) {
-            lastReulst = list
-            lastReulst.sort((a, b) => {
+        let lastResult: SearchResult[] = []
 
+        if (!searchText) {
+            if (!search_application) {
+                lastResult = list.filter((item) => {
+                    return item.type !== 'app'
+                })
+            } else {
+                lastResult = list
+            }
+
+            lastResult.sort((a, b) => {
                 const rr = b.lastUseTime - a.lastUseTime
                 return rr
             })
-            lastReulst = lastReulst.slice(0, 10)
+            lastResult = lastResult.slice(0, 10)
         } else {
-            const result = fuzzysort.go(searchText, list, { key: 'title' })
-            const results = result.slice(0, 10)
-            lastReulst = results.map((item: any) => item.obj)
-            lastReulst.sort((a, b) => {
+            if (!search_application) {
+                lastResult = list.filter((item) => {
+                    return item.type !== 'app'
+                })
+            } else {
+                lastResult = list
+            }
+
+            const result = fuzzysort.go(searchText, lastResult, {
+                key: 'title',
+                limit: 10
+            })
+            lastResult = result.map((item: any) => item.obj)
+            lastResult.sort((a, b) => {
                 return b.lastUseTime - a.lastUseTime
             })
         }
         // 让b.name === 'chat' 的排在最前面
-        lastReulst.sort((a, b) => {
+        lastResult.sort((a, b) => {
             if (a.path === 'chat_with_ai|chat') {
                 return -1
             }
@@ -69,7 +87,7 @@ export default async function main(req: Request) {
             return 0
         })
 
-        return JSON.stringify(lastReulst)
+        return JSON.stringify(lastResult)
     } catch (err) {
         console.log(err)
     }
