@@ -34,7 +34,6 @@ export default async function main(req: Request) {
     try {
         const { options } = await req.json()
         const { text: searchText, search_application } = options
-        console.log('searchText', options)
 
         if (list.length <= 0) {
 
