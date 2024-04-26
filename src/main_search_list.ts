@@ -88,7 +88,6 @@ export default async function main(req: Request) {
 
         return JSON.stringify(lastResult)
     } catch (err) {
-        console.log(err)
     }
 }
 
@@ -201,7 +200,7 @@ async function syncCommand(commadnKey: string) {
     list = list.map((item) => {
         if (item.path === commadnKey) {
             // unix 时间戳
-            item.lastUseTime = new Date().getTime()/1000
+            item.lastUseTime = new Date().getTime() / 1000
         }
         return item
     })
