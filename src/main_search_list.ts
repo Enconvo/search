@@ -96,6 +96,7 @@ export default async function main(req: Request) {
 export const handleSyncListRequest = async (req: Request): Promise<any> => {
     const options = await req.json()
 
+
     return await syncList(options)
 }
 
@@ -137,44 +138,18 @@ export const syncList = async (options: any): Promise<any> => {
 
     syncing = true
 
-    const { sync_applications } = options
+    const { sync_applications, action, commandKey } = options
 
     try {
-        // get all applications on macos use shell
-
-        try {
-            // shell 命令用于列出 /Applications 目录下所有条目的路径
-
-            let userApps: SearchResult[] = []
-            let systemApps: SearchResult[] = []
-            let coreSystemApps: SearchResult[] = []
-
-            if (sync_applications === "true") {
-                userApps = collectApps('/Applications');
-                systemApps = collectApps('/System/Applications');
-                coreSystemApps = collectApps('/System/Library/CoreServices');
-            }
-
-            const commands = await Command.getAllExecutableCommands()
-            const allCommands: SearchResult[] = commands.map((command) => {
-                return {
-                    type: 'command',
-                    title: command.title,
-                    path: `${command.extensionName}|${command.name}`,
-                    icon: command.icon || '',
-                    lastUseTime: parseInt(command.lastUseTime) || 0,
-                    id: uuidv4()
-                }
-            })
-
-            const allApps = [...userApps, ...systemApps, ...coreSystemApps, ...allCommands]
-
-            list = allApps
-
-        } catch (err) {
-            // 发生错误时捕获异常
-            console.error(`execSync error: ${err}`);
+        if (action === 'update') {
+            //只更新某个命令的使用时间
+            await syncCommand(commandKey)
+        } else {
+            await syncAll(sync_applications)
         }
+
+
+        // get all applications on macos use shell
     } catch (err) {
         // 回退table
         //@ts-ignore
@@ -182,4 +157,52 @@ export const syncList = async (options: any): Promise<any> => {
     }
 
     syncing = false
+}
+
+
+async function syncAll(sync_applications: string) {
+
+    try {
+        // shell 命令用于列出 /Applications 目录下所有条目的路径
+
+        let userApps: SearchResult[] = []
+        let systemApps: SearchResult[] = []
+        let coreSystemApps: SearchResult[] = []
+
+        if (sync_applications === "true") {
+            userApps = collectApps('/Applications');
+            systemApps = collectApps('/System/Applications');
+            coreSystemApps = collectApps('/System/Library/CoreServices');
+        }
+
+        const commands = await Command.getAllExecutableCommands()
+        const allCommands: SearchResult[] = commands.map((command) => {
+            return {
+                type: 'command',
+                title: command.title,
+                path: `${command.extensionName}|${command.name}`,
+                icon: command.icon || '',
+                lastUseTime: parseInt(command.lastUseTime) || 0,
+                id: uuidv4()
+            }
+        })
+
+        const allApps = [...userApps, ...systemApps, ...coreSystemApps, ...allCommands]
+
+        list = allApps
+
+    } catch (err) {
+        // 发生错误时捕获异常
+        console.error(`execSync error: ${err}`);
+    }
+}
+
+async function syncCommand(commadnKey: string) {
+    list = list.map((item) => {
+        if (item.path === commadnKey) {
+            // unix 时间戳
+            item.lastUseTime = new Date().getTime()/1000
+        }
+        return item
+    })
 }
