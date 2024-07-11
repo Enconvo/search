@@ -27,6 +27,15 @@ import fuzzysort from 'fuzzysort'
 
 let list: SearchResult[] = []
 
+function stringToNumber(str: string) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+}
 
 
 export default async function main(req: Request) {
@@ -51,12 +60,6 @@ export default async function main(req: Request) {
             } else {
                 lastResult = list
             }
-
-            lastResult.sort((a, b) => {
-                const rr = b.lastUseTime - a.lastUseTime
-                return rr
-            })
-            lastResult = lastResult.slice(0, 10)
         } else {
             if (!search_application) {
                 lastResult = list.filter((item) => {
@@ -68,23 +71,21 @@ export default async function main(req: Request) {
 
             const result = fuzzysort.go(searchText, lastResult, {
                 key: 'title',
-                limit: 10
+                limit: 20
             })
             lastResult = result.map((item: any) => item.obj)
-            lastResult.sort((a, b) => {
-                return b.lastUseTime - a.lastUseTime
-            })
         }
-        // 让b.name === 'chat' 的排在最前面
+
         lastResult.sort((a, b) => {
-            if (a.path === 'chat_with_ai|chat') {
-                return -1
-            }
-            if (b.path === 'chat_with_ai|chat') {
-                return 1
-            }
-            return 0
+            return b.sort - a.sort
         })
+
+        lastResult.sort((a, b) => {
+            const rr = b.lastUseTime - a.lastUseTime
+            return rr
+        })
+
+        lastResult = lastResult.slice(0, 20)
 
         return JSON.stringify(lastResult)
     } catch (err) {
@@ -159,6 +160,19 @@ export const syncList = async (options: any): Promise<any> => {
 }
 
 
+const pathToNumber: Record<string, number> = {
+    'chat_with_ai|chat': 11,
+    'chat_with_ai|emily': 10,
+    'translate|ai': 9,
+    'screen_shot_action|screenshot': 8,
+    'link_reader|summarize_webpage': 7,
+    'chat_with_doc|qa': 6,
+};
+
+function getNumberFromPath(path: string): number {
+    for (const [key, value] of Object.entries(pathToNumber)) { if (path === key) { return value; } } return 0; // 如果没有找到匹配的路径，返回默认值 0 
+}
+
 async function syncAll(sync_applications: string) {
 
     try {
@@ -175,6 +189,7 @@ async function syncAll(sync_applications: string) {
         }
 
         const commands = await Command.getAllExecutableCommands()
+
         const allCommands: SearchResult[] = commands.map((command) => {
             return {
                 type: 'command',
@@ -182,7 +197,8 @@ async function syncAll(sync_applications: string) {
                 path: `${command.extensionName}|${command.name}`,
                 icon: command.icon || '',
                 lastUseTime: parseInt(command.lastUseTime) || 0,
-                id: uuidv4()
+                id: uuidv4(),
+                sort: getNumberFromPath(`${command.extensionName}|${command.name}`)
             }
         })
 
@@ -202,6 +218,7 @@ async function syncCommand(commadnKey: string) {
             // unix 时间戳
             item.lastUseTime = new Date().getTime() / 1000
         }
+
         return item
     })
 }

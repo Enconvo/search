@@ -13,7 +13,8 @@ export interface SearchResult {
     title: string;
     path: string;
     icon: string;
-    lastUseTime?: number;
+    lastUseTime: number;
+    sort: number;
 }
 
 
