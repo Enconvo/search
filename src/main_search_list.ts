@@ -131,6 +131,7 @@ function collectApps(dir: string): any[] {
 let syncing = false
 
 export const syncList = async (options: any): Promise<any> => {
+    console.log('syncList', options)
     // 包含多个文件或者文件夹
     if (syncing) {
         return
