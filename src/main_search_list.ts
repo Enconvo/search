@@ -162,12 +162,16 @@ export const syncList = async (options: any): Promise<any> => {
 
 
 const pathToNumber: Record<string, number> = {
-    'chat_with_ai|chat': 11,
-    'chat_with_ai|emily': 10,
-    'translate|ai': 9,
-    'screen_shot_action|screenshot': 8,
-    'link_reader|summarize_webpage': 7,
-    'chat_with_doc|qa': 6,
+    'chat_with_ai|chat': 100,
+    'bot_emily|emily': 99,
+    'translate|ai': 98,
+    'screen_shot_action|screenshot': 97,
+    'link_reader|summarize_webpage': 96,
+    'writing_package|summarize': 95,
+    'writing_package|explain': 94,
+    'ocr_action|silent_screenshot_ocr': 93,
+    'ocr_action|screenshot_translate': 92,
+    'chat_with_doc|qa': 91,
 };
 
 function getNumberFromPath(path: string): number {
