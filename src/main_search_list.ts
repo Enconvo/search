@@ -71,7 +71,7 @@ export default async function main(req: Request) {
 
             const result = fuzzysort.go(searchText, lastResult, {
                 key: 'title',
-                limit: 20
+                limit: 25
             })
             lastResult = result.map((item: any) => item.obj)
         }
@@ -85,7 +85,7 @@ export default async function main(req: Request) {
             return rr
         })
 
-        lastResult = lastResult.slice(0, 20)
+        lastResult = lastResult.slice(0, 25)
 
         return JSON.stringify(lastResult)
     } catch (err) {
@@ -142,13 +142,12 @@ export const syncList = async (options: any): Promise<any> => {
     const { sync_applications, action, commandKey } = options
 
     try {
-        if (action === 'update') {
-            //只更新某个命令的使用时间
-            await syncCommand(commandKey)
-        } else {
-            await syncAll(sync_applications)
-        }
-
+        // if (action === 'update') {
+        //     //只更新某个命令的使用时间
+        //     await syncCommand(commandKey)
+        // } else {
+        await syncAll(sync_applications)
+        // }
 
         // get all applications on macos use shell
     } catch (err) {
@@ -169,9 +168,29 @@ const pathToNumber: Record<string, number> = {
     'link_reader|summarize_webpage': 96,
     'writing_package|summarize': 95,
     'writing_package|explain': 94,
-    'ocr_action|silent_screenshot_ocr': 93,
-    'ocr_action|screenshot_translate': 92,
-    'chat_with_doc|qa': 91,
+    'writing_package|emoji': 93,
+    'translate|deepl': 92,
+    'translate|google': 91,
+    'ocr_action|silent_screenshot_ocr': 89,
+    'ocr_action|screenshot_translate': 88,
+    'chat_with_doc|qa': 87,
+    'internet_browsing|serpapi': 86,
+    'tts|read_aloud': 85,
+    'tts|edge_tts': 84,
+    'image_compress|tinypng': 83,
+    'image_generation|image_generation': 82,
+    'chat_with_ai|chat_gpt-4o-latest': 81,
+    'chat_with_ai|chat_gpt-4o': 80,
+    'chat_with_ai|chat_gpt-4-o-mini': 79,
+    'chat_with_ai|chat_claude-3-opus': 78,
+    'chat_with_ai|chat_claude-3.5-sonnet': 77,
+    'chat_with_ai|chat_claude-3-haiku': 76,
+    'chat_with_ai|gemini-1.5-pro-2m': 75,
+    'chat_with_ai|gemini-1.5-pro-128k': 74,
+    'chat_with_ai|gemini-1.5-flash-1m': 73,
+    'chat_with_ai|gemini-1.5-flash-128k': 72,
+    'chat_with_ai|o1-preview': 71,
+    'chat_with_ai|o1-mini': 70,
 };
 
 function getNumberFromPath(path: string): number {
