@@ -196,6 +196,10 @@ const pathToNumber: Record<string, number> = {
     'chat_with_ai|gemini-1.5-flash-128k': 68,
     'chat_with_ai|o1-preview': 67,
     'chat_with_ai|o1-mini': 66,
+    'writing_package|make-longer': 65,
+    'writing_package|make-shorter': 64,
+    'writing_package|change_tone_to_friendly': 63,
+    'writing_package|change_tone_to_casual': 62,
 };
 
 function getNumberFromPath(path: string): number {
