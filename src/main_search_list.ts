@@ -71,7 +71,7 @@ export default async function main(req: Request) {
 
             const result = fuzzysort.go(searchText, lastResult, {
                 key: 'title',
-                limit: 25
+                limit: 50
             })
             lastResult = result.map((item: any) => item.obj)
         }
@@ -85,7 +85,7 @@ export default async function main(req: Request) {
             return rr
         })
 
-        lastResult = lastResult.slice(0, 25)
+        lastResult = lastResult.slice(0, 50)
 
         return JSON.stringify(lastResult)
     } catch (err) {
@@ -162,35 +162,40 @@ export const syncList = async (options: any): Promise<any> => {
 
 const pathToNumber: Record<string, number> = {
     'chat_with_ai|chat': 100,
-    'translate|ai': 99,
-    'chat_with_doc|qa': 98,
-    'internet_browsing|serpapi': 97,
-    'tts|read_aloud': 96,
-    'image_generation|image_generation': 95,
-    'image_compress|tinypng': 94,
-    'writing_package|explain': 93,
-    'writing_package|emoji': 92,
-    'writing_package|summarize': 91,
-    'bot_emily|emily': 90,
-    'screen_shot_action|screenshot': 89,
-    'link_reader|summarize_webpage': 88,
-    'translate|deepl': 87,
-    'translate|google': 86,
-    'ocr_action|silent_screenshot_ocr': 85,
+    'bot_emily|emily': 99,
+    'internet_browsing|serpapi': 98,
+    'chat_with_doc|qa': 97,
+    'link_reader|chat_with_link': 96,
+    'translate|ai': 95,
+    'tts|read_aloud': 94,
+    'screen_shot_action|screenshot': 93,
+    'image_generation|image_generation': 92,
+    'writing_package|explain': 91,
+    'image_compress|tinypng': 90,
+    'writing_package|summarize': 89,
+    'calender|add_event_to_apple_calender': 88,
+    'writing_package|fix-spelling-and-grammar': 87,
+    'writing_package|emoji': 86,
+    'link_reader|summarize_webpage': 85,
     'ocr_action|screenshot_translate': 84,
-    'tts|edge_tts': 83,
-    'chat_with_ai|chat_gpt-4o-latest': 82,
-    'chat_with_ai|chat_gpt-4o': 81,
-    'chat_with_ai|chat_gpt-4-o-mini': 80,
-    'chat_with_ai|chat_claude-3-opus': 79,
-    'chat_with_ai|chat_claude-3.5-sonnet': 78,
-    'chat_with_ai|chat_claude-3-haiku': 77,
-    'chat_with_ai|gemini-1.5-pro-2m': 76,
-    'chat_with_ai|gemini-1.5-pro-128k': 75,
-    'chat_with_ai|gemini-1.5-flash-1m': 74,
-    'chat_with_ai|gemini-1.5-flash-128k': 73,
-    'chat_with_ai|o1-preview': 72,
-    'chat_with_ai|o1-mini': 71,
+    'link_reader|link_read_aloud': 83,
+    'ocr_action|silent_screenshot_ocr': 82,
+    'calender|add_event_to_apple_reminder': 81,
+    'translate|deepl': 80,
+    'translate|google': 79,
+    'tts|edge_tts': 78,
+    'chat_with_ai|chat_gpt-4o-latest': 77,
+    'chat_with_ai|chat_gpt-4o': 76,
+    'chat_with_ai|chat_gpt-4-o-mini': 75,
+    'chat_with_ai|chat_claude-3-opus': 74,
+    'chat_with_ai|chat_claude-3.5-sonnet': 73,
+    'chat_with_ai|chat_claude-3-haiku': 72,
+    'chat_with_ai|gemini-1.5-pro-2m': 71,
+    'chat_with_ai|gemini-1.5-pro-128k': 70,
+    'chat_with_ai|gemini-1.5-flash-1m': 69,
+    'chat_with_ai|gemini-1.5-flash-128k': 68,
+    'chat_with_ai|o1-preview': 67,
+    'chat_with_ai|o1-mini': 66,
 };
 
 function getNumberFromPath(path: string): number {
