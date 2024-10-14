@@ -71,7 +71,7 @@ export default async function main(req: Request) {
 
             const result = fuzzysort.go(searchText, lastResult, {
                 key: 'title',
-                limit: 50
+                limit: 100
             })
             lastResult = result.map((item: any) => item.obj)
         }
@@ -85,7 +85,7 @@ export default async function main(req: Request) {
             return rr
         })
 
-        lastResult = lastResult.slice(0, 50)
+        lastResult = lastResult.slice(0, 100)
 
         return JSON.stringify(lastResult)
     } catch (err) {
@@ -168,39 +168,43 @@ const pathToNumber: Record<string, number> = {
     'link_reader|chat_with_link': 96,
     'translate|ai': 95,
     'tts|read_aloud': 94,
-    'screen_shot_action|screenshot': 93,
-    'image_generation|image_generation': 92,
-    'writing_package|explain': 91,
-    'image_compress|tinypng': 90,
-    'writing_package|summarize': 89,
-    'calender|add_event_to_apple_calender': 88,
-    'writing_package|fix-spelling-and-grammar': 87,
-    'writing_package|emoji': 86,
-    'link_reader|summarize_webpage': 85,
-    'ocr_action|screenshot_translate': 84,
-    'link_reader|link_read_aloud': 83,
-    'ocr_action|silent_screenshot_ocr': 82,
-    'calender|add_event_to_apple_reminder': 81,
-    'translate|deepl': 80,
-    'translate|google': 79,
-    'tts|edge_tts': 78,
-    'chat_with_ai|chat_gpt-4o-latest': 77,
-    'chat_with_ai|chat_gpt-4o': 76,
-    'chat_with_ai|chat_gpt-4-o-mini': 75,
-    'chat_with_ai|chat_claude-3-opus': 74,
-    'chat_with_ai|chat_claude-3.5-sonnet': 73,
-    'chat_with_ai|chat_claude-3-haiku': 72,
-    'chat_with_ai|gemini-1.5-pro-2m': 71,
-    'chat_with_ai|gemini-1.5-pro-128k': 70,
-    'chat_with_ai|gemini-1.5-flash-1m': 69,
-    'chat_with_ai|gemini-1.5-flash-128k': 68,
-    'chat_with_ai|o1-preview': 67,
-    'chat_with_ai|o1-mini': 66,
-    'writing_package|make-longer': 65,
-    'writing_package|make-shorter': 64,
-    'writing_package|change_tone_to_friendly': 63,
-    'writing_package|change_tone_to_casual': 62,
+    'chat_with_ai|local_chat_ollama': 93,
+    'screen_shot_action|screenshot': 92,
+    'image_generation|image_generation': 91,
+    'writing_package|explain': 90,
+    'image_compress|tinypng': 89,
+    'writing_package|summarize': 88,
+    'calender|add_event_to_apple_calender': 87,
+    'writing_package|fix-spelling-and-grammar': 86,
+    'writing_package|emoji': 85,
+    'link_reader|summarize_webpage': 84,
+    'ocr_action|screenshot_translate': 83,
+    'link_reader|link_read_aloud': 82,
+    'ocr_action|silent_screenshot_ocr': 81,
+    'calender|add_event_to_apple_reminder': 80,
+    'translate|deepl': 79,
+    'translate|google': 78,
+    'tts|edge_tts': 77,
+    'bot_spanish_teacher|spanish_teacher': 76,
+    'bot_latin_teacher|latin_teacher': 75,
+    'chat_with_ai|chat_gpt-4o-latest': 74,
+    'chat_with_ai|chat_gpt-4o': 73,
+    'chat_with_ai|chat_gpt-4-o-mini': 72,
+    'chat_with_ai|chat_claude-3-opus': 71,
+    'chat_with_ai|chat_claude-3.5-sonnet': 70,
+    'chat_with_ai|chat_claude-3-haiku': 69,
+    'chat_with_ai|gemini-1.5-pro-2m': 68,
+    'chat_with_ai|gemini-1.5-pro-128k': 67,
+    'chat_with_ai|gemini-1.5-flash-1m': 66,
+    'chat_with_ai|gemini-1.5-flash-128k': 65,
+    'chat_with_ai|o1-preview': 64,
+    'chat_with_ai|o1-mini': 63,
+    'writing_package|make-longer': 62,
+    'writing_package|make-shorter': 61,
+    'writing_package|change_tone_to_friendly': 60,
+    'writing_package|change_tone_to_casual': 59,
 };
+
 
 function getNumberFromPath(path: string): number {
     for (const [key, value] of Object.entries(pathToNumber)) { if (path === key) { return value; } } return 0; // 如果没有找到匹配的路径，返回默认值 0 
