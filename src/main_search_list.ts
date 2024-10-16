@@ -43,6 +43,7 @@ export default async function main(req: Request) {
     try {
         const { options } = await req.json()
         const { text: searchText, search_application } = options
+        const limit = options.limit || 10
 
         if (list.length <= 0) {
 
@@ -71,7 +72,7 @@ export default async function main(req: Request) {
 
             const result = fuzzysort.go(searchText, lastResult, {
                 key: 'title',
-                limit: 100
+                limit: limit
             })
             lastResult = result.map((item: any) => item.obj)
         }
@@ -85,7 +86,7 @@ export default async function main(req: Request) {
             return rr
         })
 
-        lastResult = lastResult.slice(0, 100)
+        lastResult = lastResult.slice(0, limit)
 
         return JSON.stringify(lastResult)
     } catch (err) {
@@ -142,12 +143,28 @@ export const syncList = async (options: any): Promise<any> => {
     const { sync_applications, action, commandKey } = options
 
     try {
-        // if (action === 'update') {
-        //     //只更新某个命令的使用时间
-        //     await syncCommand(commandKey)
-        // } else {
-        await syncAll(sync_applications)
-        // }
+        if (action === 'update') {
+            //只更新某个命令的使用时间
+            await syncCommand(commandKey)
+        } else if (action === 'delete') {
+
+            list = list.filter((item) => {
+                return item.path !== commandKey
+            })
+        }
+        else if (action === 'remove') {
+
+            list = list.map((item) => {
+                if (item.path === commandKey) {
+                    // unix 时间戳
+                    item.lastUseTime = 0
+                }
+                return item
+            })
+        }
+        else {
+            await syncAll(sync_applications)
+        }
 
         // get all applications on macos use shell
     } catch (err) {
@@ -160,54 +177,61 @@ export const syncList = async (options: any): Promise<any> => {
 }
 
 
-const pathToNumber: Record<string, number> = {
-    'chat_with_ai|chat': 100,
-    'bot_emily|emily': 99,
-    'internet_browsing|serpapi': 98,
-    'chat_with_doc|qa': 97,
-    'link_reader|chat_with_link': 96,
-    'translate|ai': 95,
-    'tts|read_aloud': 94,
-    'chat_with_ai|local_chat_ollama': 93,
-    'screen_shot_action|screenshot': 92,
-    'image_generation|image_generation': 91,
-    'writing_package|explain': 90,
-    'image_compress|tinypng': 89,
-    'writing_package|summarize': 88,
-    'calender|add_event_to_apple_calender': 87,
-    'writing_package|fix-spelling-and-grammar': 86,
-    'writing_package|emoji': 85,
-    'link_reader|summarize_webpage': 84,
-    'ocr_action|screenshot_translate': 83,
-    'link_reader|link_read_aloud': 82,
-    'ocr_action|silent_screenshot_ocr': 81,
-    'calender|add_event_to_apple_reminder': 80,
-    'translate|deepl': 79,
-    'translate|google': 78,
-    'tts|edge_tts': 77,
-    'bot_spanish_teacher|spanish_teacher': 76,
-    'bot_latin_teacher|latin_teacher': 75,
-    'chat_with_ai|chat_gpt-4o-latest': 74,
-    'chat_with_ai|chat_gpt-4o': 73,
-    'chat_with_ai|chat_gpt-4-o-mini': 72,
-    'chat_with_ai|chat_claude-3-opus': 71,
-    'chat_with_ai|chat_claude-3.5-sonnet': 70,
-    'chat_with_ai|chat_claude-3-haiku': 69,
-    'chat_with_ai|gemini-1.5-pro-2m': 68,
-    'chat_with_ai|gemini-1.5-pro-128k': 67,
-    'chat_with_ai|gemini-1.5-flash-1m': 66,
-    'chat_with_ai|gemini-1.5-flash-128k': 65,
-    'chat_with_ai|o1-preview': 64,
-    'chat_with_ai|o1-mini': 63,
-    'writing_package|make-longer': 62,
-    'writing_package|make-shorter': 61,
-    'writing_package|change_tone_to_friendly': 60,
-    'writing_package|change_tone_to_casual': 59,
-};
+const defaultCommandList: string[] = [
+    'chat_with_ai|chat',
+    'bot_emily|emily',
+    'internet_browsing|serpapi',
+    'chat_with_doc|qa',
+    'link_reader|chat_with_link',
+    'translate|ai',
+    'tts|read_aloud',
+    'chat_with_ai|local_chat_ollama',
+    'screen_shot_action|screenshot',
+    'image_generation|image_generation',
+    'writing_package|explain',
+    'image_compress|tinypng',
+    'writing_package|summarize',
+    'calender|add_event_to_apple_calender',
+    'writing_package|fix-spelling-and-grammar',
+    'writing_package|emoji',
+    'link_reader|summarize_webpage',
+    'ocr_action|screenshot_translate',
+    'link_reader|link_read_aloud',
+    'ocr_action|silent_screenshot_ocr',
+    'calender|add_event_to_apple_reminder',
+    'translate|deepl',
+    'translate|google',
+    'tts|edge_tts',
+    'bot_spanish_teacher|spanish_teacher',
+    'bot_latin_teacher|latin_teacher',
+    'chat_with_ai|chat_gpt-4o-latest',
+    'chat_with_ai|chat_gpt-4o',
+    'chat_with_ai|chat_gpt-4-o-mini',
+    'chat_with_ai|chat_claude-3-opus',
+    'chat_with_ai|chat_claude-3.5-sonnet',
+    'chat_with_ai|chat_claude-3-haiku',
+    'chat_with_ai|gemini-1.5-pro-2m',
+    'chat_with_ai|gemini-1.5-pro-128k',
+    'chat_with_ai|gemini-1.5-flash-1m',
+    'chat_with_ai|gemini-1.5-flash-128k',
+    'chat_with_ai|o1-preview',
+    'chat_with_ai|o1-mini',
+    'writing_package|make-longer',
+    'writing_package|make-shorter',
+    'writing_package|change_tone_to_friendly',
+    'writing_package|change_tone_to_casual'
+];
 
 
 function getNumberFromPath(path: string): number {
-    for (const [key, value] of Object.entries(pathToNumber)) { if (path === key) { return value; } } return 0; // 如果没有找到匹配的路径，返回默认值 0 
+    const index = defaultCommandList.indexOf(path);
+    if (index !== -1) {
+        // 我们返回 (100 - index) 来保持原始的数字顺序，
+        // 因为在原始 Record 中，较高的数字对应较早的索引
+        return 100 - index;
+    }
+    return 0
+
 }
 
 async function syncAll(sync_applications: string) {
