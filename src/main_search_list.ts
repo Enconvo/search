@@ -27,23 +27,13 @@ import fuzzysort from 'fuzzysort'
 
 let list: SearchResult[] = []
 
-function stringToNumber(str: string) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash);
-}
-
 
 export default async function main(req: Request) {
     // let table;
     try {
         const { options } = await req.json()
         const { text: searchText, search_application } = options
-        const limit = options.limit || 10
+        const limit = options.limit || 100
 
         if (list.length <= 0) {
 
@@ -177,50 +167,6 @@ export const syncList = async (options: any): Promise<any> => {
 }
 
 
-const defaultCommandList: string[] = [
-    'chat_with_ai|chat',
-    'bot_emily|emily',
-    'internet_browsing|serpapi',
-    'chat_with_doc|qa',
-    'link_reader|chat_with_link',
-    'translate|ai',
-    'tts|read_aloud',
-    'chat_with_ai|local_chat_ollama',
-    'screen_shot_action|screenshot',
-    'image_generation|image_generation',
-    'writing_package|explain',
-    'image_compress|tinypng',
-    'writing_package|summarize',
-    'calender|add_event_to_apple_calender',
-    'writing_package|fix-spelling-and-grammar',
-    'writing_package|emoji',
-    'link_reader|summarize_webpage',
-    'ocr_action|screenshot_translate',
-    'link_reader|link_read_aloud',
-    'ocr_action|silent_screenshot_ocr',
-    'calender|add_event_to_apple_reminder',
-    'translate|deepl',
-    'translate|google',
-    'tts|edge_tts',
-    'bot_spanish_teacher|spanish_teacher',
-    'bot_latin_teacher|latin_teacher',
-    'chat_with_ai|chat_gpt-4o-latest',
-    'chat_with_ai|chat_gpt-4o',
-    'chat_with_ai|chat_gpt-4-o-mini',
-    'chat_with_ai|chat_claude-3-opus',
-    'chat_with_ai|chat_claude-3.5-sonnet',
-    'chat_with_ai|chat_claude-3-haiku',
-    'chat_with_ai|gemini-1.5-pro-2m',
-    'chat_with_ai|gemini-1.5-pro-128k',
-    'chat_with_ai|gemini-1.5-flash-1m',
-    'chat_with_ai|gemini-1.5-flash-128k',
-    'chat_with_ai|o1-preview',
-    'chat_with_ai|o1-mini',
-    'writing_package|make-longer',
-    'writing_package|make-shorter',
-    'writing_package|change_tone_to_friendly',
-    'writing_package|change_tone_to_casual'
-];
 
 
 function getNumberFromPath(path: string): number {
@@ -283,3 +229,52 @@ async function syncCommand(commadnKey: string) {
         return item
     })
 }
+
+
+const defaultCommandList: string[] = [
+    'chat_with_ai|chat',
+    'internet_browsing|serpapi',
+    'chat_with_doc|qa',
+    'voice_input|voice_input_method',
+    'voice_input|voice_input',
+    'link_reader|chat_with_link',
+    'translate|ai',
+    'tts|read_aloud',
+    'chat_with_ai|local_chat_ollama',
+    'screen_shot_action|screenshot',
+    'image_generation|image_generation',
+    'writing_package|explain',
+    'image_compress|tinypng',
+    'prompt_generator|prompt_generator_openai',
+    'writing_package|summarize',
+    'bot_emily|emily',
+    'calender|add_event_to_apple_calender',
+    'writing_package|fix-spelling-and-grammar',
+    'writing_package|emoji',
+    'link_reader|summarize_webpage',
+    'ocr_action|screenshot_translate',
+    'link_reader|link_read_aloud',
+    'ocr_action|silent_screenshot_ocr',
+    'calender|add_event_to_apple_reminder',
+    'translate|deepl',
+    'translate|google',
+    'tts|edge_tts',
+    'bot_spanish_teacher|spanish_teacher',
+    'bot_latin_teacher|latin_teacher',
+    'chat_with_ai|chat_gpt-4o-latest',
+    'chat_with_ai|chat_gpt-4o',
+    'chat_with_ai|chat_gpt-4-o-mini',
+    'chat_with_ai|chat_claude-3-opus',
+    'chat_with_ai|chat_claude-3.5-sonnet',
+    'chat_with_ai|chat_claude-3-haiku',
+    'chat_with_ai|gemini-1.5-pro-2m',
+    'chat_with_ai|gemini-1.5-pro-128k',
+    'chat_with_ai|gemini-1.5-flash-1m',
+    'chat_with_ai|gemini-1.5-flash-128k',
+    'chat_with_ai|o1-preview',
+    'chat_with_ai|o1-mini',
+    'writing_package|make-longer',
+    'writing_package|make-shorter',
+    'writing_package|change_tone_to_friendly',
+    'writing_package|change_tone_to_casual'
+];
