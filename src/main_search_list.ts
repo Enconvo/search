@@ -201,8 +201,11 @@ async function syncAll(sync_applications: string) {
             return {
                 type: 'command',
                 title: command.title,
+                //@ts-ignore
+                commandType: command.commandType,
                 path: `${command.extensionName}|${command.name}`,
                 icon: command.icon || '',
+                //@ts-ignore
                 lastUseTime: parseInt(command.lastUseTime) || 0,
                 id: uuidv4(),
                 sort: getNumberFromPath(`${command.extensionName}|${command.name}`)
